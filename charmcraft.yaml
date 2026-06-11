@@ -1,0 +1,32 @@
+name: vantage-agent
+title: The Vantage Agent Charmed Operator.
+summary: Vantage Agent lifecycle encapsulated in a charm.
+description: |
+  This charm provides the Agent component of Vantage installed by Snap.
+  It embeds the snap package in a charm app and wraps its life cycle.
+
+links:
+  contact: Email us at info@vantagecompute.ai
+  issues: ["https://github.com/vantagecompute/vantage-agent-charm/issues"]
+  source: ["https://github.com/vantagecompute/vantage-agent-charm"]
+
+subordinate: true
+
+type: charm
+platforms:
+  ubuntu@24.04:amd64:
+
+parts:
+  charm: {}
+
+requires:
+  juju-info:
+    interface: juju-info
+    scope: container
+
+config:
+  options:
+    configuration-credentials-secret-id:
+      type: string
+      description: Juju secret ID containing vantage-url, client-id, and client-secret. The secret must be granted to this application.
+      default: ""

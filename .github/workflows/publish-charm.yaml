@@ -1,0 +1,62 @@
+name: Publish charm
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Pack and publish to Charmhub
+    runs-on: ubuntu-24.04
+    env:
+      CHANNEL: ${{ vars.CHARMHUB_CHANNEL || 'edge' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Setup LXD
+        uses: canonical/setup-lxd@v0.1.2
+        with:
+          channel: 6/stable
+
+      - name: Verify tag matches pyproject version
+        run: |
+          set -euo pipefail
+          tag_version="${GITHUB_REF_NAME#v}"
+          pyproject_version="$(sed -n 's/^version = "\([^"]*\)".*/\1/p' pyproject.toml)"
+          if [[ -z "$pyproject_version" ]]; then
+            echo "pyproject.toml does not define a version" >&2
+            exit 1
+          fi
+          if [[ "$pyproject_version" != "$tag_version" ]]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match pyproject.toml version ${pyproject_version}" >&2
+            exit 1
+          fi
+
+      - name: Check uv lockfile
+        run: uv lock --check
+
+      - name: Install charmcraft
+        run: sudo snap install charmcraft --classic
+
+      - name: Pack charm
+        run: charmcraft pack --use-lxd
+
+      - name: Upload and release charm
+        env:
+          CHARMCRAFT_AUTH: ${{ secrets.CHARMCRAFT_AUTH }}
+        run: |
+          set -euo pipefail
+          charm_file="$(find . -maxdepth 1 -name '*.charm' -print -quit)"
+          if [[ -z "$charm_file" ]]; then
+            echo "No .charm file produced by charmcraft pack" >&2
+            exit 1
+          fi
+          charmcraft upload "$charm_file" --release "$CHANNEL"

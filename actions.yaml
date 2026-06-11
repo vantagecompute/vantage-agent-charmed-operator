@@ -1,0 +1,17 @@
+configure-credentials:
+  description: Store Vantage Agent credentials in one Juju secret and configure the snap.
+  params:
+    vantage-url:
+      type: string
+      description: Vantage application URL.
+    client-id:
+      type: string
+      description: OIDC client ID used to download and configure the Vantage Agent snap.
+    client-secret:
+      type: string
+      description: OIDC client secret used to download and configure the Vantage Agent snap.
+  required:
+    - vantage-url
+    - client-id
+    - client-secret
+  additionalProperties: false

@@ -1,0 +1,9 @@
+*.charm
+.craft/
+parts/
+prime/
+stage/
+.venv/
+.pytest_cache/
+__pycache__/
+*.py[cod]
