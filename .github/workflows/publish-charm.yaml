@@ -11,7 +11,7 @@ permissions:
 jobs:
   publish:
     name: Pack and publish to Charmhub
-    runs-on: ubuntu-24.04
+    runs-on: ${{ vars.USE_SELF_HOSTED_RUNNERS == 'true' && fromJSON(vars.SELF_HOSTED_RUNS_ON || '{"group":"vantage-eng","labels":["X64"]}') || 'ubuntu-26.04' }}
     env:
       CHANNEL: ${{ vars.CHARMHUB_CHANNEL || 'edge' }}
     steps:
@@ -20,6 +20,8 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: ${{ runner.environment == 'github-hosted' }}
 
       - name: Setup LXD
         uses: canonical/setup-lxd@v0.1.2
