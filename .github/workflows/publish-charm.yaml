@@ -20,6 +20,8 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: ${{ runner.environment == 'github-hosted' }}
 
       - name: Setup LXD
         uses: canonical/setup-lxd@v0.1.2
