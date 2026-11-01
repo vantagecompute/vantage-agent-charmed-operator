@@ -8,7 +8,7 @@
 # Vantage Agent Charmed Operator
 A Juju charm for installing and operating the Vantage Agent snap.
 
-[![Python](https://img.shields.io/badge/python-3.12+-blue.svg)](https://python.org)
+[![Python](https://img.shields.io/badge/python-3.14+-blue.svg)](https://python.org)
 [![Juju](https://img.shields.io/badge/juju-charm-orange.svg)](https://juju.is/)
 [![Charmcraft](https://img.shields.io/badge/charmcraft-4.x-purple.svg)](https://canonical-charmcraft.readthedocs-hosted.com/)
 
@@ -34,12 +34,12 @@ just pack
 ```
 
 The pack recipe runs `charmcraft pack --use-lxd` and produces a platform-specific
-`.charm` artifact, such as `vantage-agent_ubuntu@24.04-amd64.charm`.
+`.charm` artifact, such as `vantage-agent_amd64.charm`.
 
 ### Deploy locally
 
 ```bash
-juju deploy ./vantage-agent_ubuntu@24.04-amd64.charm
+juju deploy ./vantage-agent_amd64.charm
 ```
 
 This is a subordinate charm. Relate it to the principal unit that should run the
